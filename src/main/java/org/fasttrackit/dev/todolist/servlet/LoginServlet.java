@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         String u = request.getParameter("username");
         String p = request.getParameter("password");
 
-        boolean found = false;
+        int found = -1;
         try {
             found = DBOperations.login(u,p);
         } catch (ClassNotFoundException e) {
@@ -37,10 +37,11 @@ public class LoginServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (found) {
+        if (found !=-1) {
 
             //daca fieldul din browser nu este gol se atribuie valoarea din input
             session.setAttribute("username",u);
+            session.setAttribute("userid", found);
 
         }
 

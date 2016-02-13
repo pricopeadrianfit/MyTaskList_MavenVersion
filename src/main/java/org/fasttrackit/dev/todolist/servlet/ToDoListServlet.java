@@ -80,7 +80,7 @@ public class ToDoListServlet extends HttpServlet {
         // call db
         List l = new LinkedList();
         try {
-            l=DBOperations.readItems();
+            l=DBOperations.readItems((Integer)session.getAttribute("userid"));
             System.out.println("lungime din db:"+l.size());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -124,8 +124,11 @@ public class ToDoListServlet extends HttpServlet {
         String idS = request.getParameter(ID_TASK);
         int id = Integer.parseInt(idS);
 
+        HttpSession s= request.getSession();
+        int userid=(Integer)s.getAttribute("userid");
+
         try {
-            DBOperations.updateItem(id);
+            DBOperations.updateItem(id,userid);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -143,16 +146,11 @@ public class ToDoListServlet extends HttpServlet {
 
         String value = request.getParameter(VALUE_NEWTASK);
         String dueDate = request.getParameter(DUEDATE_NEWTASK);
+    int userid=(Integer)session.getAttribute("userid");
 
-
-
-        MyListOfToDoMock myListObject = MyListOfToDoMock.getInstance();
-       // myListObject.printList();
-
-        myListObject.addItem(value,dueDate);
 
         try {
-            DBOperations.addItem(value,dueDate,false);
+            DBOperations.addItem(value,dueDate,false, userid);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {

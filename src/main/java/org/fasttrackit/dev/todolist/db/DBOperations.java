@@ -24,7 +24,7 @@ public class DBOperations {
         try {
 //            DBOperations.addItem("ana are pere","2016-03-04",false);
 //            DBOperations.readItems();
-            boolean f;
+            int f;
             f=DBOperations.login("adrian","123");
             System.out.println(f);
         } catch (ClassNotFoundException e) {
@@ -37,7 +37,7 @@ public class DBOperations {
     }
 
 
-    public static void addItem(String whatToDo, String dueDate, boolean isDone) throws ClassNotFoundException, SQLException {
+    public static void addItem(String whatToDo, String dueDate, boolean isDone, int userid) throws ClassNotFoundException, SQLException {
 
         // 1. load driver
         Class.forName("org.postgresql.Driver");
@@ -51,10 +51,11 @@ public class DBOperations {
         Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
         // 4. create a query statement
-        PreparedStatement pSt = conn.prepareStatement("INSERT INTO ToDoo (whatToDo, dueDate, isDone) VALUES (?,?,?)");
+        PreparedStatement pSt = conn.prepareStatement("INSERT INTO ToDoo (whatToDo, dueDate, isDone, userid) VALUES (?,?,?,?)");
         pSt.setString(1, whatToDo);
         pSt.setDate(2, java.sql.Date.valueOf(dueDate)); //assumes a certain format
         pSt.setBoolean(3, isDone);
+        pSt.setInt(4, userid);
 
 
 
@@ -66,8 +67,9 @@ public class DBOperations {
         conn.close();
     }
 
-    public static List readItems() throws ClassNotFoundException, SQLException {
+    public static List readItems(int userid) throws ClassNotFoundException, SQLException {
         // 1. load driver
+
         Class.forName("org.postgresql.Driver");
 
         // 2. define connection params to db
@@ -82,8 +84,7 @@ public class DBOperations {
         Statement st = conn.createStatement();
 
         // 5. execute a query
-        ResultSet rs = st.executeQuery("SELECT * FROM ToDoo where isDone is false");
-
+        ResultSet rs = st.executeQuery("SELECT * FROM ToDoo where isDone is false AND userid="+ userid );
         // 6. iterate the result set and print the values
 
         List returnValues = new LinkedList();
@@ -105,7 +106,7 @@ public class DBOperations {
         return returnValues;
     }
 
-    public static void updateItem(int id) throws ClassNotFoundException, SQLException {
+    public static void updateItem(int id, int userid) throws ClassNotFoundException, SQLException {
 
         // 1. load driver
         Class.forName("org.postgresql.Driver");
@@ -119,8 +120,9 @@ public class DBOperations {
         Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
         // 4. create a query statement
-        PreparedStatement pSt = conn.prepareStatement("UPDATE ToDoo SET isDone=true WHERE id=?");
+        PreparedStatement pSt = conn.prepareStatement("UPDATE ToDoo SET isDone=true WHERE id=? and userid=? ");
         pSt.setInt(1, id);
+        pSt.setInt(2, userid);
 
 
 
@@ -132,7 +134,7 @@ public class DBOperations {
         conn.close();
     }
 
-    public static boolean login(String user , String password) throws ClassNotFoundException, SQLException {
+    public static int login(String user , String password) throws ClassNotFoundException, SQLException {
         // 1. load driver
         Class.forName("org.postgresql.Driver");
 
@@ -152,10 +154,10 @@ public class DBOperations {
 
         // 6. iterate the result set and print the value
 
-     boolean found=false;
+     int found=-1;
         while (rs.next()) {
 
-            found=true;
+            found=rs.getInt("id");
         }
 
         // 7. close the objects
