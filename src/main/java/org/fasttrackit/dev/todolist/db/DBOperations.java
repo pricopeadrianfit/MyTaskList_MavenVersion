@@ -22,8 +22,11 @@ public class DBOperations {
 
     public static void main(String[] a) {
         try {
-            DBOperations.addItem("ana are pere","2016-03-04",false);
-            DBOperations.readItems();
+//            DBOperations.addItem("ana are pere","2016-03-04",false);
+//            DBOperations.readItems();
+            boolean f;
+            f=DBOperations.login("adrian","123");
+            System.out.println(f);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -129,6 +132,39 @@ public class DBOperations {
         conn.close();
     }
 
+    public static boolean login(String user , String password) throws ClassNotFoundException, SQLException {
+        // 1. load driver
+        Class.forName("org.postgresql.Driver");
+
+        // 2. define connection params to db
+        final String URL = "jdbc:postgresql://54.93.65.5:5432/Agenda_Adrian";
+        final String USERNAME = "fasttrackit_dev";
+        final String PASSWORD = "fasttrackit_dev";
+
+        // 3. obtain a connection
+        Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+
+        // 4. create a query statement
+        Statement st = conn.createStatement();
+
+        // 5. execute a que0
+        ResultSet rs = st.executeQuery("SELECT * FROM users where username='"+user+ "' AND password='"+password+ "'");
+
+        // 6. iterate the result set and print the value
+
+     boolean found=false;
+        while (rs.next()) {
+
+            found=true;
+        }
+
+        // 7. close the objects
+        rs.close();
+        st.close();
+        conn.close();
+
+        return found;
+    }
 
 //    private static void demoDelete() throws ClassNotFoundException, SQLException {
 //

@@ -4,3 +4,41 @@
 #listOfTasks ul {
     list-style: none;
 }
+
+body  {
+    background-image: url("ToDo.jpg");
+    background-color: #cccccc;
+}
+
+h1 {
+    color: #3d363c;
+    font-family: "MS Gothic";
+}
+
+h2 {
+    color: #3d363c;
+    font-family: "MS Gothic";
+}
+ul {
+    background: #3399ff;
+    padding: 20px;
+}
+
+a:link, a:visited {
+    background-color: #3399ff;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+
+a:hover, a:active {
+    background-color: #3399ff;
+}
+
+ul li {
+    background: #cce5ff;
+    margin: 5px;
+}
